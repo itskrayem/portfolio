@@ -402,6 +402,15 @@
             { text: "> PHONE NUMBER: ", delay: 20 },
             { text: "+96176938271", delay: 30, style: "color: #0ff" },
             { text: "\n\n", delay: 100 },
+
+
+            { text: ">> DOWNLOAD CV << ",delay: 10, style: "color: #b19cd9; text-decoration: underline" },
+            { text: "\n", delay: 100 },
+            { text: "> ", delay: 20 },
+            { text: "Click here to download", delay: 30, style: "color: #0ff", isLink: true, href: "cv.pdf" },
+            { text: "\n\n", delay: 100 },
+            
+
             { text: "> Type 'help' for available commands", delay: 30, style: "color: #0f0" },
             { text: "\n", delay: 50 },
         ];
@@ -423,14 +432,27 @@
             
             if (currentCharIndex < textToType.length) {
                 const char = textToType.charAt(currentCharIndex);
-                const span = document.createElement('span');
-                span.textContent = char;
-                
-                if (currentMessage.style) {
-                    span.style = currentMessage.style;
-                }
-                
-                terminalText.appendChild(span);
+                let element;
+if (currentMessage.isLink && currentCharIndex === 0) {
+    element = document.createElement('a');
+    element.href = currentMessage.href;
+    element.download = '';
+    element.target = '_blank';
+    element.style = currentMessage.style || 'color: #0ff';
+    element.textContent = currentMessage.text;
+    terminalText.appendChild(element);
+    currentMessageIndex++;
+    currentCharIndex = 0;
+    setTimeout(typeNextCharacter, 100);
+    return;
+} else {
+    element = document.createElement('span');
+    element.textContent = char;
+    if (currentMessage.style) {
+        element.style = currentMessage.style;
+    }
+    terminalText.appendChild(element);
+}
                 terminalText.parentElement.scrollTop = terminalText.parentElement.scrollHeight;
                 currentCharIndex++;
                 
